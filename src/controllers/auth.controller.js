@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { createUser, findUserByEmail } from "../models/user.js";
+import { createUser, findUserByEmail } from "../models/User.js";
 
 export const register = async (req, res) => {
   const { email, password } = req.body;

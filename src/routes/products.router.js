@@ -1,7 +1,4 @@
 import { Router } from "express";
-
-const router = Router()
-
 import { 
     getAllProducts, 
     SearchProducts, 
@@ -10,16 +7,19 @@ import {
     updateProduct,
     deleteProduct
 } from "../controllers/products.controller.js";
+import { verifyToken } from "../middlewares/verify-token.js";
 
-router.get('/products', getAllProducts);
-router.get('/products/search', SearchProducts);
-router.get("/products/:id", getProductById);
+const router = Router();
 
-router.post('/products', createProduct);
+// Rutas públicas (lectura)
+router.get('/', getAllProducts);
+router.get('/search', SearchProducts);
+router.get('/:id', getProductById);
 
-router.put('/products/:id', updateProduct);
-
-router.delete('/products/:id', deleteProduct)
+// Rutas protegidas (escritura)
+router.post('/', verifyToken, createProduct);
+router.put('/:id', verifyToken, updateProduct);
+router.delete('/:id', verifyToken, deleteProduct);
 
 export default router;
 
