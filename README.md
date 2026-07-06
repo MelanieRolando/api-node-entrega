@@ -4,6 +4,14 @@
 
 API REST para la gestión de productos desarrollada con Node.js y Express. La API utiliza autenticación mediante JWT y Firebase para la persistencia de datos.
 
+## Deploy
+
+La API se encuentra desplegada en Render y puede accederse desde la siguiente URL:
+
+```text
+https://api-node-entrega.onrender.com
+```
+
 ## Instalación
 
 1. Clonar el repositorio.
