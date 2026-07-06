@@ -1,0 +1,94 @@
+import {db} from './firebase.js';
+
+import {
+    collection, 
+    getDocs, 
+    doc, 
+    getDoc, 
+    addDoc, 
+    setDoc, 
+    deleteDoc,
+    query,
+    where 
+} from "firebase/firestore";
+
+const productCollection = collection(db, "products");
+
+export const getAllProducts = async () => {
+    try {
+        const snapshot = await getDocs(productCollection);
+        return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    }   catch (error) {
+        console.error(error);
+    }
+};
+
+export const getProductsById = async (id) => {
+    try {
+        const productRef = doc(productCollection, id);
+        const snapshot = await getDoc (productRef);
+        return snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } : null;
+    } catch (error) {
+        console.error(error);
+        throw error;        
+    }
+};
+
+export const getProductByCategory = async (category) => {
+  try {
+    const q = query(
+      productCollection,
+      where("categories", "array-contains", category)
+    );
+
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+export const createProduct = async (data) => {
+    try {
+        const docRef = await addDoc(productCollection, data);
+return {id: docRef.id, ...data };
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const updateProduct = async (id, productData) => {
+    try {
+        const productRef = doc (productCollection, id);
+        const snapshot = await getDoc(productRef);
+
+        if (!snapshot.exists()) {
+            return false;
+        }
+
+        await setDoc(productRef, productData);
+        return {id, ...productData };
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const deleteProduct = async (id) => {
+    try {
+      const productRef = doc(productCollection, id);
+      const snapshot = await getDoc(productRef);
+      
+      if(!snapshot.exists()){
+        return false;
+      }
+
+      await deleteDoc(productRef);
+      return true;
+    } catch (error) {
+        console.error(error);
+    }
+} 
